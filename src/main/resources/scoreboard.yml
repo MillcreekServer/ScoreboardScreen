@@ -1,0 +1,35 @@
+Title:
+  Value: MillCreek #be careful that the scoreboard title has length limit!
+  Animation:
+    Value: exampleAnimation.js &7 &a #scriptName, param1, param2, ...
+    Tick: 5 #animation interval (will run per 5 tick). 5 if not specified.
+Objectives:
+  NameKey:
+    Value: '&7[&b플레이어&7]'
+  PlayerName:
+    Value: '&7 이름: &f%player_name%'
+  Balance:
+    Value: '&7 자금: &6%vault_eco_balance_fixed%'
+  GuildKey:
+    Value: '&7[&b길드 &6%federations_guild_name%&7]'
+  GroupKey:
+    Value: '  ┗&7[&b그룹 &f%federations_guild_group_name%&7]'
+  GuildBalance:
+    Value: '&7 길드 자금: &6%federations_guild_balance%'
+  GuildMembers:
+    Value: '&7 길드원: &a%federations_guild_onlinemembers%&7/&4%federations_guild_members% &7명'
+  ServerKey:
+    Value: '&7[&b서버&7]'
+  ServerTotal:
+    Value: '&7 서버 전체: &6%bungee_total% 명'
+  CurrentTotal:
+    Value: '&7 현재 서버: &a%server_online% 명'
+  RunningTime:
+    Value: '&7 가동 시간: &a%server_uptime%'
+  MenuTipKey:
+    Value: '&7[&b메뉴 열기&7]'
+    Animation:
+      Value: blink.js &f
+      Tick: 5
+  MenuTip:
+    Value: '  &d/m'
