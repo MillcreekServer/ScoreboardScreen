@@ -1,4 +1,4 @@
-package org.scoreboardscreen.constants;
+package io.github.scoreboardscreen.constants;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;

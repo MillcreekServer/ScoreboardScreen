@@ -1,5 +1,6 @@
-package org.scoreboardscreen.constants;
+package io.github.scoreboardscreen.constants;
 
+import io.github.scoreboardscreen.manager.ScoreboardManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -7,8 +8,6 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
-import org.scoreboardscreen.manager.ScoreboardManager;
-import org.scoreboardscreen.manager.ScoreboardManager.Line;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -142,7 +141,7 @@ public class UserScoreboard extends Thread {
 			TeamLine valueLine = lines.get(index);
 			objSide.getScore(String.valueOf(valueLine.color)).setScore(-index);
 
-			Line line = manager.getScoreboard(player).get(index);
+			ScoreboardManager.Line line = manager.getScoreboard(player).get(index);
 			String value = ChatColor.RESET + line.value.parse(player);
 			value = value.substring(0, Math.min(40, value.length()));
 			setLine(valueLine.team, value);

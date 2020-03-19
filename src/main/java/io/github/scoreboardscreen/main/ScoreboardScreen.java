@@ -1,4 +1,4 @@
-package org.scoreboardscreen.main;
+package io.github.scoreboardscreen.main;
 
 import io.github.wysohn.rapidframework2.bukkit.main.AbstractBukkitPlugin;
 import io.github.wysohn.rapidframework2.bukkit.main.BukkitPluginBridge;

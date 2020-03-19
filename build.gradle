@@ -1,59 +1,81 @@
 apply plugin: 'java-library'
+apply plugin: 'maven-publish'
 
 repositories {
     jcenter()
     mavenCentral()
-	maven {
-		url "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
-	}
-	maven {
-		url "http://nexus.hc.to/content/repositories/pub_releases/"
-	}
-	maven {
-		url "https://oss.sonatype.org/content/repositories/snapshots"
-	}
-	maven{
-		url "https://repo.extendedclip.com/content/repositories/placeholderapi/"
-	}
-	maven{
-		url "https://maven.pkg.github.com/wysohn/RapidFramework"
-		credentials {
-			username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
-			password = project.findProperty("gpr.token") ?: System.getenv("TOKEN")
-		}
-	}
+    maven {
+        url "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
+    }
+    maven {
+        url "http://nexus.hc.to/content/repositories/pub_releases/"
+    }
+    maven {
+        url "https://oss.sonatype.org/content/repositories/snapshots"
+    }
+    maven{
+        url "https://repo.extendedclip.com/content/repositories/placeholderapi/"
+    }
+    maven{
+        url "https://maven.pkg.github.com/wysohn/RapidFramework"
+        credentials {
+            username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+            password = project.findProperty("gpr.token") ?: System.getenv("TOKEN")
+        }
+    }
 }
+
+group = 'io.github.wysohn'
+version = '2.0.0'
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
 
 sourceSets {
-	main {
-		java {
-			srcDirs = ['src/main/java']
-		}
-		resources {
-			srcDirs = ['src/main/resources']
-			include '**/*.yml'
-			include '**/*.js'
-		}
-	}
-	
-	test{
-	 	java {
+    main {
+        java {
+            srcDirs = ['src/main/java']
+        }
+        resources {
+            srcDirs = ['src/main/resources']
+            include '**/*.yml'
+            include '**/*.js'
+        }
+    }
+
+    test{
+        java {
             srcDirs = ['src/test/java/']
         }
-	}
+    }
 }
 
 dependencies {
-	compile fileTree(dir: "libs", includes: ['*.jar'])
+    compile fileTree(dir: "libs", includes: ['*.jar'])
 
-	compile "org.spigotmc:spigot-api:1.15.2+"
-	compile "me.clip:placeholderapi:2.9.+:"
-	compile "io.github.wysohn:RapidFramework:2.2.4"
-	
+    compile "org.spigotmc:spigot-api:1.15.2+"
+    compile "me.clip:placeholderapi:2.9.+:"
+    compile "io.github.wysohn:RapidFramework:2.2.4"
+
     testCompile 'junit:junit:4.+'
     testCompile 'org.mockito:mockito-core:2.+'
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "ScoreboardScreen"
+            url = uri("https://maven.pkg.github.com/wysohn/ScoreboardScreen")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+                password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
+            }
+        }
+    }
+    publications {
+        gpr(MavenPublication) {
+            from(components.java)
+        }
+    }
 }

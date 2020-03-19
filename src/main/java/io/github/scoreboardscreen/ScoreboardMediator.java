@@ -1,10 +1,10 @@
-package org.scoreboardscreen;
+package io.github.scoreboardscreen;
 
+import io.github.scoreboardscreen.constants.UserScoreboard;
+import io.github.scoreboardscreen.manager.ScoreboardManager;
+import io.github.scoreboardscreen.manager.UserManager;
 import io.github.wysohn.rapidframework2.core.main.PluginMain;
 import org.bukkit.entity.Player;
-import org.scoreboardscreen.constants.UserScoreboard;
-import org.scoreboardscreen.manager.ScoreboardManager;
-import org.scoreboardscreen.manager.UserManager;
 
 import java.util.UUID;
 

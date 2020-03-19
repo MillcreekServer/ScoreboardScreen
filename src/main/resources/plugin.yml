@@ -1,5 +1,5 @@
 name: ScoreboardScreen
-main: org.scoreboardscreen.main.ScoreboardScreen
+main: io.github.scoreboardscreen.main.ScoreboardScreen
 version: 2.0.0
 depend: [PlaceholderAPI, RapidFramework]
 commands:

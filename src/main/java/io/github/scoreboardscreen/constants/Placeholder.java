@@ -1,4 +1,4 @@
-package org.scoreboardscreen.constants;
+package io.github.scoreboardscreen.constants;
 
 import io.github.wysohn.rapidframework2.bukkit.main.objects.BukkitPlayer;
 import io.github.wysohn.rapidframework2.bukkit.manager.api.PlaceholderAPI;

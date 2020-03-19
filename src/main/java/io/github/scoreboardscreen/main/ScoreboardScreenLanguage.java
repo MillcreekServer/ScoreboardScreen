@@ -1,4 +1,4 @@
-package org.scoreboardscreen.main;
+package io.github.scoreboardscreen.main;
 
 import io.github.wysohn.rapidframework2.core.manager.lang.Lang;
 

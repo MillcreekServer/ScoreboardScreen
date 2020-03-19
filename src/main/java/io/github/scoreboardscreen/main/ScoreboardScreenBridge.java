@@ -1,14 +1,14 @@
-package org.scoreboardscreen.main;
+package io.github.scoreboardscreen.main;
 
+import io.github.scoreboardscreen.manager.ScoreboardManager;
+import io.github.scoreboardscreen.manager.UserManager;
 import io.github.wysohn.rapidframework2.bukkit.main.AbstractBukkitPlugin;
 import io.github.wysohn.rapidframework2.bukkit.main.BukkitPluginBridge;
 import io.github.wysohn.rapidframework2.core.interfaces.plugin.IPluginManager;
 import io.github.wysohn.rapidframework2.core.main.PluginMain;
 import io.github.wysohn.rapidframework2.core.manager.command.SubCommand;
 import org.bukkit.ChatColor;
-import org.scoreboardscreen.ScoreboardMediator;
-import org.scoreboardscreen.manager.ScoreboardManager;
-import org.scoreboardscreen.manager.UserManager;
+import io.github.scoreboardscreen.ScoreboardMediator;
 
 import java.io.File;
 import java.util.List;

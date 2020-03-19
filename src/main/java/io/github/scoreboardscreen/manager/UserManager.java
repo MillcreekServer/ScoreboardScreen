@@ -1,5 +1,6 @@
-package org.scoreboardscreen.manager;
+package io.github.scoreboardscreen.manager;
 
+import io.github.scoreboardscreen.constants.UserScoreboard;
 import io.github.wysohn.rapidframework2.core.main.PluginMain;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -10,8 +11,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
-import org.scoreboardscreen.ScoreboardMediator;
-import org.scoreboardscreen.constants.UserScoreboard;
+import io.github.scoreboardscreen.ScoreboardMediator;
 
 import java.util.Map;
 import java.util.Map.Entry;
