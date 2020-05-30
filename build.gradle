@@ -26,7 +26,7 @@ repositories {
 }
 
 group = 'io.github.wysohn'
-version = '2.0.0'
+version = '2.0.1'
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
@@ -56,7 +56,7 @@ dependencies {
 
     compile "org.spigotmc:spigot-api:1.15.2+"
     compile "me.clip:placeholderapi:2.9.+:"
-    compile "io.github.wysohn:RapidFramework:2.2.4"
+    compile "io.github.wysohn:RapidFramework:2.9.13"
 
     testCompile 'junit:junit:4.+'
     testCompile 'org.mockito:mockito-core:2.+'

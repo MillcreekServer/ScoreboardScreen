@@ -1,5 +1,6 @@
 package io.github.scoreboardscreen.manager;
 
+import io.github.scoreboardscreen.ScoreboardMediator;
 import io.github.scoreboardscreen.constants.UserScoreboard;
 import io.github.wysohn.rapidframework2.core.main.PluginMain;
 import org.bukkit.Bukkit;
@@ -11,7 +12,6 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
-import io.github.scoreboardscreen.ScoreboardMediator;
 
 import java.util.Map;
 import java.util.Map.Entry;
@@ -21,7 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class UserManager extends PluginMain.Manager implements Listener {
     private final long INTERVAL_MILLIS;
 
-    private Map<UUID, UserScoreboard> users = new ConcurrentHashMap<UUID, UserScoreboard>();
+    private final Map<UUID, UserScoreboard> users = new ConcurrentHashMap<UUID, UserScoreboard>();
 
     private Thread scoreboardUpdateThread;
 
@@ -85,10 +85,10 @@ public class UserManager extends PluginMain.Manager implements Listener {
     public void onJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
 
-        main().getBridge().getTaskSupervisor().runAsync(() -> {
+        main().task().async(() -> {
             Thread.sleep(50L);
 
-            main().getBridge().getTaskSupervisor().runSync(() -> {
+            main().task().sync(() -> {
                 main().getMediator(ScoreboardMediator.class).ifPresent(scoreboardMediator ->
                         scoreboardMediator.putUser(player));
                 return null;
