@@ -1,8 +1,8 @@
 package io.github.scoreboardscreen.main;
 
+import io.github.scoreboardscreen.constants.User;
 import io.github.wysohn.rapidframework2.bukkit.main.AbstractBukkitPlugin;
 import io.github.wysohn.rapidframework2.bukkit.main.BukkitPluginBridge;
-import io.github.wysohn.rapidframework2.bukkit.main.objects.BukkitPlayer;
 import io.github.wysohn.rapidframework2.core.interfaces.plugin.IPluginManager;
 import io.github.wysohn.rapidframework2.core.manager.player.AbstractPlayerWrapper;
 import org.bukkit.Bukkit;
@@ -28,6 +28,6 @@ public class ScoreboardScreen extends AbstractBukkitPlugin {
     @Override
     protected Optional<? extends AbstractPlayerWrapper> getPlayerWrapper(UUID uuid) {
         return Optional.ofNullable(Bukkit.getPlayer(uuid))
-                .map(player -> new BukkitPlayer(player.getUniqueId()).setSender(player));
+                .map(player -> new User(player.getUniqueId()).setSender(player));
     }
 }

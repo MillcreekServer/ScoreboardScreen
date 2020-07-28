@@ -1,6 +1,5 @@
 package io.github.scoreboardscreen.constants;
 
-import io.github.wysohn.rapidframework2.bukkit.main.objects.BukkitPlayer;
 import io.github.wysohn.rapidframework2.bukkit.manager.api.PlaceholderAPI;
 import io.github.wysohn.rapidframework2.core.main.PluginMain;
 import org.bukkit.entity.Player;
@@ -44,7 +43,7 @@ public class Placeholder {
             interval = 0;
 
         result = main.api().getAPI(PlaceholderAPI.class).map(placeholderAPI ->
-                placeholderAPI.parse(new BukkitPlayer(sender.getUniqueId()).setSender(sender), value))
+                placeholderAPI.parse(new User(sender.getUniqueId()).setSender(sender), value))
                 .orElse(value);
 
         if (!fail && animation != null) {
