@@ -1,12 +1,12 @@
 package io.github.scoreboardscreen.manager;
 
+import io.github.scoreboardscreen.constants.Animation;
+import io.github.scoreboardscreen.constants.Placeholder;
 import io.github.wysohn.rapidframework2.bukkit.utils.Utf8YamlConfiguration;
 import io.github.wysohn.rapidframework2.core.main.PluginMain;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import io.github.scoreboardscreen.constants.Animation;
-import io.github.scoreboardscreen.constants.Placeholder;
 import util.JarUtil;
 
 import javax.script.ScriptException;

@@ -3,7 +3,6 @@ package io.github.scoreboardscreen.manager;
 import io.github.scoreboardscreen.ScoreboardMediator;
 import io.github.scoreboardscreen.constants.UserScoreboard;
 import io.github.wysohn.rapidframework2.core.main.PluginMain;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -12,6 +11,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
 import java.util.Map;
 import java.util.Map.Entry;
@@ -36,20 +36,13 @@ public class UserManager extends PluginMain.Manager implements Listener {
 
     @Override
     public void enable() throws Exception {
-        scoreboardUpdateThread = new ScoreboardUpdateThread(INTERVAL_MILLIS);
-        scoreboardUpdateThread.start();
+
     }
 
     @Override
     public void load() throws Exception {
         if (scoreboardUpdateThread != null)
             scoreboardUpdateThread.interrupt();
-
-        Bukkit.getOnlinePlayers().forEach(player -> main().getMediator(ScoreboardMediator.class)
-                .ifPresent(scoreboardMediator -> {
-                    scoreboardMediator.removeUser(player.getUniqueId());
-                    scoreboardMediator.putUser(player);
-                }));
 
         scoreboardUpdateThread = new ScoreboardUpdateThread(INTERVAL_MILLIS);
         scoreboardUpdateThread.start();
@@ -77,14 +70,24 @@ public class UserManager extends PluginMain.Manager implements Listener {
     public void onRespawn(PlayerRespawnEvent e) {
         Player player = e.getPlayer();
 
-        main().getMediator(ScoreboardMediator.class).ifPresent(scoreboardMediator ->
-                scoreboardMediator.putUser(player));
+        lazyUpdate(player);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
 
+        lazyUpdate(player);
+    }
+
+    @EventHandler
+    public void onTeleport(PlayerTeleportEvent e) {
+        Player player = e.getPlayer();
+
+        lazyUpdate(player);
+    }
+
+    private void lazyUpdate(Player player) {
         main().task().async(() -> {
             Thread.sleep(50L);
 
@@ -120,7 +123,7 @@ public class UserManager extends PluginMain.Manager implements Listener {
             try {
                 while (this.isAlive() && !this.isInterrupted()) {
                     for (Entry<UUID, UserScoreboard> entry : users.entrySet()) {
-                        entry.getValue().run();
+                        entry.getValue().update();
                     }
 
                     Thread.sleep(intervalMillis);

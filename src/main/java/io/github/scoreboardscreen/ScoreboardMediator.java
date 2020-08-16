@@ -4,6 +4,7 @@ import io.github.scoreboardscreen.constants.UserScoreboard;
 import io.github.scoreboardscreen.manager.ScoreboardManager;
 import io.github.scoreboardscreen.manager.UserManager;
 import io.github.wysohn.rapidframework2.core.main.PluginMain;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
@@ -20,7 +21,10 @@ public class ScoreboardMediator extends PluginMain.Mediator {
 
     @Override
     public void load() throws Exception {
-
+        Bukkit.getOnlinePlayers().forEach(player -> {
+            removeUser(player.getUniqueId());
+            putUser(player);
+        });
     }
 
     @Override
@@ -42,9 +46,6 @@ public class ScoreboardMediator extends PluginMain.Mediator {
     }
 
     public void removeUser(UUID playerUuid) {
-        UserScoreboard board = userManager.getUsers().remove(playerUuid);
-        if (board != null) {
-            board.interrupt();
-        }
+        userManager.getUsers().remove(playerUuid);
     }
 }

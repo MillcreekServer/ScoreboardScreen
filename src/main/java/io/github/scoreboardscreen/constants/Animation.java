@@ -8,13 +8,15 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 
 public class Animation {
-    private ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
+    private final ScriptEngine engine = new ScriptEngineManager(null).getEngineByName("nashorn");
     private final int tick;
 
     public Animation(File script, int tick) throws FileNotFoundException, ScriptException {
-        super();
+        assert engine != null;
         this.tick = tick;
-        engine.eval(new FileReader(script));
+
+        FileReader fr = new FileReader(script);
+        engine.eval(fr);
     }
 
     public Animation(File script) throws FileNotFoundException, ScriptException {

@@ -8,6 +8,7 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
+import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -16,23 +17,23 @@ import java.util.concurrent.ConcurrentHashMap;
 
 //핑 길드 접속인원 돈 접속시간 접속횟수
 
-public class UserScoreboard extends Thread {
+public class UserScoreboard {
 	private static final int MAXIMUM_OBJECTIVE_NUM = 7;
 
 	private final ScoreboardManager manager;
 	private final Player player;
 
-	private String title;
+	private final String title;
 	private final List<TeamLine> lines = new ArrayList<>();
 
-	private Scoreboard board;
+	private final Scoreboard board;
 
-	private Objective objSide;
-	private Objective objBelow;
+	private final Objective objSide;
+	private final Objective objBelow;
 
-	private Map<String, List<String>> teams = new TeamMap();
-	private Map<String, String> prefixes = new ConcurrentHashMap<String, String>();
-	private Map<String, String> suffixes = new ConcurrentHashMap<String, String>();
+	private final Map<String, List<String>> teams = new TeamMap();
+	private final Map<String, String> prefixes = new ConcurrentHashMap<String, String>();
+	private final Map<String, String> suffixes = new ConcurrentHashMap<String, String>();
 
 	public UserScoreboard(ScoreboardManager manager, Player player) {
 		this.manager = manager;
@@ -55,8 +56,6 @@ public class UserScoreboard extends Thread {
 		objBelow.setDisplaySlot(DisplaySlot.BELOW_NAME);
 		objBelow.setDisplayName(ChatColor.DARK_RED + "/ 20");
 		player.setHealth(player.getHealth());
-
-		this.setName(player.getName() + " SCBoard updater");
 
 		player.setScoreboard(board);
 	}
@@ -129,12 +128,10 @@ public class UserScoreboard extends Thread {
 	}};
 	static DecimalFormat df = new DecimalFormat("#,###,##0.00");
 
-	@Override
-	public void run() {
+	public void update() {
 		String currentTitle = manager.getTitle(player).parse(player);
 
 		objSide.setDisplayName(currentTitle);
-
 		for (int index = 0; index < manager.getScoreboard(player).size(); index++) {
 			if (index > lines.size() - 1)
 				break;
@@ -247,7 +244,7 @@ public class UserScoreboard extends Thread {
 	private class TeamMap extends ConcurrentHashMap<String, List<String>> {
 
 		@Override
-		public List<String> put(String key, List<String> value) {
+		public List<String> put(@NotNull String key, @NotNull List<String> value) {
 			List<String> result = super.put(key, value);
 			onTeamAdd(key);
 			if (result != null) {
@@ -257,7 +254,7 @@ public class UserScoreboard extends Thread {
 		}
 
 		@Override
-		public List<String> remove(Object key) {
+		public List<String> remove(@NotNull Object key) {
 			List<String> result = super.remove(key);
 			if (result != null && key instanceof String) {
 				onTeamRemove((String) key);
@@ -267,10 +264,10 @@ public class UserScoreboard extends Thread {
 
 		@Override
 		public void clear() {
-			super.clear();
 			for (Entry<String, List<String>> entry : super.entrySet()) {
 				onTeamRemove(entry.getKey());
 			}
+			super.clear();
 		}
 	}
 
