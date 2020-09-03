@@ -13,6 +13,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
@@ -21,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class UserManager extends PluginMain.Manager implements Listener {
     private final long INTERVAL_MILLIS;
 
-    private final Map<UUID, UserScoreboard> users = new ConcurrentHashMap<UUID, UserScoreboard>();
+    private final Map<UUID, UserScoreboard> users = new ConcurrentHashMap<>();
 
     private Thread scoreboardUpdateThread;
 
@@ -122,8 +123,13 @@ public class UserManager extends PluginMain.Manager implements Listener {
         public void run() {
             try {
                 while (this.isAlive() && !this.isInterrupted()) {
-                    for (Entry<UUID, UserScoreboard> entry : users.entrySet()) {
-                        entry.getValue().update();
+                    for (Entry<UUID, UserScoreboard> entry : new HashMap<>(users).entrySet()) {
+                        try {
+                            entry.getValue().update();
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                            main().getLogger().warning(entry.getKey().toString());
+                        }
                     }
 
                     Thread.sleep(intervalMillis);

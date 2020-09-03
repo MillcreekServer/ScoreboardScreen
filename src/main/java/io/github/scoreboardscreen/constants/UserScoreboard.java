@@ -129,6 +129,9 @@ public class UserScoreboard {
 	static DecimalFormat df = new DecimalFormat("#,###,##0.00");
 
 	public void update() {
+		if (!player.isOnline())
+			return;
+
 		String currentTitle = manager.getTitle(player).parse(player);
 
 		objSide.setDisplayName(currentTitle);
