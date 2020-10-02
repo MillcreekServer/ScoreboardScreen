@@ -53,7 +53,7 @@ dependencies {
 
     compile "org.spigotmc:spigot-api:1.15.2+"
     compile "me.clip:placeholderapi:2.9.+:"
-    compile "io.github.wysohn:RapidFramework:2.17.0"
+    compile "io.github.wysohn:RapidFramework:3.5.15"
 
     testCompile 'junit:junit:4.+'
     testCompile 'org.mockito:mockito-core:2.+'
