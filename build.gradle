@@ -14,7 +14,7 @@ repositories {
         url "https://repo.extendedclip.com/content/repositories/placeholderapi/"
     }
     maven{
-        url "https://maven.pkg.github.com/wysohn/RapidFramework"
+        url "https://maven.pkg.github.com/millcreekserver/rapidframework"
         credentials {
             username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
             password = project.findProperty("gpr.token") ?: System.getenv("TOKEN")
@@ -63,7 +63,7 @@ publishing {
     repositories {
         maven {
             name = "ScoreboardScreen"
-            url = uri("https://maven.pkg.github.com/wysohn/ScoreboardScreen")
+            url = uri("https://maven.pkg.github.com/millcreekserver/scoreboardscreen")
             credentials {
                 username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
                 password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
