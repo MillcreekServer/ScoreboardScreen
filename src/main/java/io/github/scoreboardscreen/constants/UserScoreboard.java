@@ -8,7 +8,6 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
-import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -247,7 +246,7 @@ public class UserScoreboard {
 	private class TeamMap extends ConcurrentHashMap<String, List<String>> {
 
 		@Override
-		public List<String> put(@NotNull String key, @NotNull List<String> value) {
+		public List<String> put(String key, List<String> value) {
 			List<String> result = super.put(key, value);
 			onTeamAdd(key);
 			if (result != null) {
@@ -257,7 +256,7 @@ public class UserScoreboard {
 		}
 
 		@Override
-		public List<String> remove(@NotNull Object key) {
+		public List<String> remove(Object key) {
 			List<String> result = super.remove(key);
 			if (result != null && key instanceof String) {
 				onTeamRemove((String) key);
