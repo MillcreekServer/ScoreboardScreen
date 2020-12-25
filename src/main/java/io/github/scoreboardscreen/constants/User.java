@@ -1,6 +1,7 @@
 package io.github.scoreboardscreen.constants;
 
-import io.github.wysohn.rapidframework2.bukkit.main.objects.BukkitPlayer;
+
+import io.github.wysohn.rapidframework3.bukkit.data.BukkitPlayer;
 
 import java.util.UUID;
 

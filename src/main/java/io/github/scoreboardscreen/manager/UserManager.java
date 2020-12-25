@@ -1,8 +1,11 @@
 package io.github.scoreboardscreen.manager;
 
-import io.github.scoreboardscreen.ScoreboardMediator;
-import io.github.scoreboardscreen.constants.UserScoreboard;
-import io.github.wysohn.rapidframework2.core.main.PluginMain;
+import io.github.scoreboardscreen.interfaces.IUserScoreboard;
+import io.github.scoreboardscreen.interfaces.IUserScoreboardFactory;
+import io.github.wysohn.rapidframework3.core.inject.annotations.PluginLogger;
+import io.github.wysohn.rapidframework3.core.main.Manager;
+import io.github.wysohn.rapidframework3.interfaces.plugin.ITaskSupervisor;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -13,26 +16,33 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
 
-public class UserManager extends PluginMain.Manager implements Listener {
-    private final long INTERVAL_MILLIS;
+@Singleton
+public class UserManager extends Manager implements Listener {
+    private final long INTERVAL_MILLIS = 50L;
+    private final ITaskSupervisor task;
+    private final Logger logger;
+    private final IUserScoreboardFactory scoreboardFactory;
 
-    private final Map<UUID, UserScoreboard> users = new ConcurrentHashMap<>();
+    private final Map<UUID, IUserScoreboard> users = new ConcurrentHashMap<>();
 
     private Thread scoreboardUpdateThread;
 
-    public UserManager(int loadPriority) {
-        this(loadPriority, 50L);
-    }
-
-    public UserManager(int loadPriority, long INTERVAL_MILLIS) {
-        super(loadPriority);
-        this.INTERVAL_MILLIS = INTERVAL_MILLIS;
+    @Inject
+    public UserManager(ITaskSupervisor task,
+                       @PluginLogger Logger logger,
+                       IUserScoreboardFactory scoreboardFactory) {
+        this.task = task;
+        this.logger = logger;
+        this.scoreboardFactory = scoreboardFactory;
     }
 
     @Override
@@ -45,6 +55,11 @@ public class UserManager extends PluginMain.Manager implements Listener {
         if (scoreboardUpdateThread != null)
             scoreboardUpdateThread.interrupt();
 
+        Bukkit.getOnlinePlayers().forEach(player -> {
+            users.remove(player.getUniqueId());
+            users.put(player.getUniqueId(), scoreboardFactory.create(player));
+        });
+
         scoreboardUpdateThread = new ScoreboardUpdateThread(INTERVAL_MILLIS);
         scoreboardUpdateThread.start();
     }
@@ -55,16 +70,15 @@ public class UserManager extends PluginMain.Manager implements Listener {
             scoreboardUpdateThread.interrupt();
     }
 
-    public Map<UUID, UserScoreboard> getUsers() {
-        return users;
+    public IUserScoreboard getBoard(UUID playerUuid){
+        return users.get(playerUuid);
     }
 
     @EventHandler
     public void onDeath(PlayerDeathEvent e) {
         Player player = e.getEntity();
 
-        main().getMediator(ScoreboardMediator.class).ifPresent(scoreboardMediator ->
-                scoreboardMediator.removeUser(player.getUniqueId()));
+        users.remove(player.getUniqueId());
     }
 
     @EventHandler
@@ -89,12 +103,14 @@ public class UserManager extends PluginMain.Manager implements Listener {
     }
 
     private void lazyUpdate(Player player) {
-        main().task().async(() -> {
+        task.async(() -> {
             Thread.sleep(50L);
 
-            main().task().sync(() -> {
-                main().getMediator(ScoreboardMediator.class).ifPresent(scoreboardMediator ->
-                        scoreboardMediator.putUser(player));
+            task.sync(() -> {
+                if(users.containsKey(player.getUniqueId()))
+                    return null;
+
+                users.put(player.getUniqueId(), scoreboardFactory.create(player));
                 return null;
             }).get();
             return null;
@@ -105,8 +121,7 @@ public class UserManager extends PluginMain.Manager implements Listener {
     public void onQuit(PlayerQuitEvent e) {
         Player player = e.getPlayer();
 
-        main().getMediator(ScoreboardMediator.class).ifPresent(scoreboardMediator ->
-                scoreboardMediator.removeUser(player.getUniqueId()));
+        users.remove(player.getUniqueId());
     }
 
     private class ScoreboardUpdateThread extends Thread {
@@ -123,19 +138,19 @@ public class UserManager extends PluginMain.Manager implements Listener {
         public void run() {
             try {
                 while (this.isAlive() && !this.isInterrupted()) {
-                    for (Entry<UUID, UserScoreboard> entry : new HashMap<>(users).entrySet()) {
+                    for (Entry<UUID, IUserScoreboard> entry : new HashMap<>(users).entrySet()) {
                         try {
                             entry.getValue().update();
                         } catch (Exception ex) {
                             ex.printStackTrace();
-                            main().getLogger().warning(entry.getKey().toString());
+                            logger.warning(entry.getKey().toString());
                         }
                     }
 
                     Thread.sleep(intervalMillis);
                 }
             } catch (InterruptedException ex) {
-                main().getLogger().info("Scoreboard update is interrupted.");
+                logger.info("Scoreboard update is interrupted.");
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

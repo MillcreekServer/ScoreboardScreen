@@ -2,13 +2,20 @@ package io.github.scoreboardscreen.manager;
 
 import io.github.scoreboardscreen.constants.Animation;
 import io.github.scoreboardscreen.constants.Placeholder;
-import io.github.wysohn.rapidframework2.bukkit.utils.Utf8YamlConfiguration;
-import io.github.wysohn.rapidframework2.core.main.PluginMain;
-import io.github.wysohn.rapidframework2.tools.JarUtil;
+import io.github.scoreboardscreen.constants.UserScoreboard;
+import io.github.scoreboardscreen.interfaces.IUserScoreboardFactory;
+import io.github.wysohn.rapidframework3.bukkit.utils.Utf8YamlConfiguration;
+import io.github.wysohn.rapidframework3.core.api.ManagerExternalAPI;
+import io.github.wysohn.rapidframework3.core.inject.annotations.PluginDirectory;
+import io.github.wysohn.rapidframework3.core.inject.annotations.PluginLogger;
+import io.github.wysohn.rapidframework3.core.main.Manager;
+import io.github.wysohn.rapidframework3.utils.JarUtil;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.script.ScriptException;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -18,8 +25,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
 
-public class ScoreboardManager extends PluginMain.Manager {
+@Singleton
+public class ScoreboardManager extends Manager {
+    private final File pluginDirectory;
+    private final Logger logger;
+    private final ManagerExternalAPI api;
+
     private final Map<UUID, Board> boards = new ConcurrentHashMap<>();
 
     private File configFile;
@@ -27,17 +40,22 @@ public class ScoreboardManager extends PluginMain.Manager {
 
     private File jsFolder;
 
-    public ScoreboardManager(int loadPriority) {
-        super(loadPriority);
+    @Inject
+    public ScoreboardManager(@PluginDirectory File pluginDirectory,
+                             @PluginLogger Logger logger,
+                             ManagerExternalAPI api) {
+        this.pluginDirectory = pluginDirectory;
+        this.logger = logger;
+        this.api = api;
     }
 
     @Override
     public void enable() throws Exception {
-        configFile = new File(main().getPluginDirectory(), "scoreboard.yml");
-        JarUtil.copyFromJar(getClass(), "scoreboard.yml", main().getPluginDirectory(), JarUtil.CopyOption.COPY_IF_NOT_EXIST);
+        configFile = new File(pluginDirectory, "scoreboard.yml");
+        JarUtil.copyFromJar(getClass(), "scoreboard.yml", pluginDirectory, JarUtil.CopyOption.COPY_IF_NOT_EXIST);
 
-        jsFolder = new File(main().getPluginDirectory(), "animation");
-        JarUtil.copyFromJar(getClass(), "*.js", main().getPluginDirectory(), JarUtil.CopyOption.COPY_IF_NOT_EXIST);
+        jsFolder = new File(pluginDirectory, "animation");
+        JarUtil.copyFromJar(getClass(), "*.js", pluginDirectory, JarUtil.CopyOption.COPY_IF_NOT_EXIST);
     }
 
     @Override
@@ -83,8 +101,8 @@ public class ScoreboardManager extends PluginMain.Manager {
             try {
                 board.title = extractPlaceHolder(titleSection);
             } catch (FileNotFoundException | ScriptException e1) {
-                main().getLogger().warning("While reading Title:");
-                main().getLogger().warning(e1.getMessage());
+                logger.warning("While reading Title:");
+                logger.warning(e1.getMessage());
             }
         }
 
@@ -99,8 +117,8 @@ public class ScoreboardManager extends PluginMain.Manager {
                     Placeholder ph = extractPlaceHolder(section);
                     board.scoreboard.add(new Line(key, ph));
                 } catch (FileNotFoundException | ScriptException e) {
-                    main().getLogger().warning("While reading element [" + key + "]:");
-                    main().getLogger().warning(e.getMessage());
+                    logger.warning("While reading element [" + key + "]:");
+                    logger.warning(e.getMessage());
                 }
             }
         }
@@ -113,7 +131,7 @@ public class ScoreboardManager extends PluginMain.Manager {
 
         Placeholder ph = null;
         if (animation == null) {
-            ph = new Placeholder(main(), value);
+            ph = new Placeholder(api, value);
         } else {
             String[] splits = animation.split(" ");
             String jsNames = splits[0];
@@ -127,9 +145,9 @@ public class ScoreboardManager extends PluginMain.Manager {
             Animation anim = new Animation(new File(jsFolder, jsNames), tick);
 
             if (args.isEmpty())
-                ph = new Placeholder(main(), value, anim);
+                ph = new Placeholder(api, value, anim);
             else
-                ph = new Placeholder(main(), value, anim, args.toArray(new String[0]));
+                ph = new Placeholder(api, value, anim, args.toArray(new String[0]));
         }
         return ph;
     }

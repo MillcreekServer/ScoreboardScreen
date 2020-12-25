@@ -1,29 +1,29 @@
 package io.github.scoreboardscreen.constants;
 
-import io.github.wysohn.rapidframework2.bukkit.manager.api.PlaceholderAPI;
-import io.github.wysohn.rapidframework2.core.main.PluginMain;
+import io.github.wysohn.rapidframework3.bukkit.manager.api.PlaceholderAPI;
+import io.github.wysohn.rapidframework3.core.api.ManagerExternalAPI;
 import org.bukkit.entity.Player;
 
 import javax.script.ScriptException;
 
 public class Placeholder {
-    private final PluginMain main;
+    private final ManagerExternalAPI api;
 
     final String value;
     final Animation animation;
 
     final String[] params;
 
-    public Placeholder(PluginMain main, String value) {
-        this(main, value, null);
+    public Placeholder(ManagerExternalAPI api, String value) {
+        this(api, value, null);
     }
 
-    public Placeholder(PluginMain main, String value, Animation animation) {
-        this(main, value, animation, new String[0]);
+    public Placeholder(ManagerExternalAPI api, String value, Animation animation) {
+        this(api, value, animation, new String[0]);
     }
 
-    public Placeholder(PluginMain main, String value, Animation animation, String... params) {
-        this.main = main;
+    public Placeholder(ManagerExternalAPI api, String value, Animation animation, String... params) {
+        this.api = api;
         this.value = value;
         this.animation = animation;
         this.params = params;
@@ -42,7 +42,7 @@ public class Placeholder {
         if (interval < 0)
             interval = 0;
 
-        result = main.api().getAPI(PlaceholderAPI.class).map(placeholderAPI ->
+        result = api.getAPI(PlaceholderAPI.class).map(placeholderAPI ->
                 placeholderAPI.parse(new User(sender.getUniqueId()).setSender(sender), value))
                 .orElse(value);
 

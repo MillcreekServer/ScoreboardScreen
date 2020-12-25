@@ -1,5 +1,7 @@
 package io.github.scoreboardscreen.constants;
 
+import com.google.inject.assistedinject.Assisted;
+import io.github.scoreboardscreen.interfaces.IUserScoreboard;
 import io.github.scoreboardscreen.manager.ScoreboardManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -9,6 +11,7 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
+import javax.inject.Inject;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -16,7 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 //핑 길드 접속인원 돈 접속시간 접속횟수
 
-public class UserScoreboard {
+public class UserScoreboard implements IUserScoreboard {
 	private static final int MAXIMUM_OBJECTIVE_NUM = 7;
 
 	private final ScoreboardManager manager;
@@ -34,7 +37,8 @@ public class UserScoreboard {
 	private final Map<String, String> prefixes = new ConcurrentHashMap<String, String>();
 	private final Map<String, String> suffixes = new ConcurrentHashMap<String, String>();
 
-	public UserScoreboard(ScoreboardManager manager, Player player) {
+	@Inject
+	public UserScoreboard(ScoreboardManager manager, @Assisted Player player) {
 		this.manager = manager;
 		this.player = player;
 
@@ -62,6 +66,7 @@ public class UserScoreboard {
 	/**
 	 * @return true if board is on; false if board is off
 	 */
+	@Override
 	public boolean toggleScoreboard() {
 		if (player.getScoreboard() != board) {
 			player.setScoreboard(board);
@@ -72,10 +77,12 @@ public class UserScoreboard {
 		}
 	}
 
+	@Override
 	public void setPrefix(String teamName, String prefix) {
 		prefixes.put(teamName, prefix);
 	}
 
+	@Override
 	public void setSuffix(String teamName, String suffix) {
 		suffixes.put(teamName, suffix);
 	}
@@ -84,6 +91,7 @@ public class UserScoreboard {
 	 * @param teamName
 	 * @param teamMembers
 	 */
+	@Override
 	public void setTeamList(String teamName, List<String> teamMembers) {
 		synchronized (teams) {
 			if (teams.containsKey(teamName))
@@ -93,18 +101,21 @@ public class UserScoreboard {
 		}
 	}
 
+	@Override
 	public void removeTeamList(String teamName) {
 		synchronized (teams) {
 			teams.remove(teamName);
 		}
 	}
 
+	@Override
 	public boolean hasTeam(String teamName) {
 		synchronized (teams) {
 			return teams.containsKey(teamName);
 		}
 	}
 
+	@Override
 	public void clearAllTeamList() {
 		synchronized (teams) {
 			teams.clear();
@@ -127,6 +138,7 @@ public class UserScoreboard {
 	}};
 	static DecimalFormat df = new DecimalFormat("#,###,##0.00");
 
+	@Override
 	public void update() {
 		if (!player.isOnline())
 			return;
