@@ -1,4 +1,4 @@
-package io.github.scoreboardscreen.main;
+package io.github.wysohn.scoreboardscreen.main;
 
 import io.github.wysohn.rapidframework3.bukkit.testutils.SimpleBukkitPluginMainTest;
 import junit.framework.TestCase;

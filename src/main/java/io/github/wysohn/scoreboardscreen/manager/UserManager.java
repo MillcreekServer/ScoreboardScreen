@@ -1,10 +1,10 @@
-package io.github.scoreboardscreen.manager;
+package io.github.wysohn.scoreboardscreen.manager;
 
-import io.github.scoreboardscreen.interfaces.IUserScoreboard;
-import io.github.scoreboardscreen.interfaces.IUserScoreboardFactory;
 import io.github.wysohn.rapidframework3.core.inject.annotations.PluginLogger;
 import io.github.wysohn.rapidframework3.core.main.Manager;
 import io.github.wysohn.rapidframework3.interfaces.plugin.ITaskSupervisor;
+import io.github.wysohn.scoreboardscreen.interfaces.IUserScoreboard;
+import io.github.wysohn.scoreboardscreen.interfaces.IUserScoreboardFactory;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

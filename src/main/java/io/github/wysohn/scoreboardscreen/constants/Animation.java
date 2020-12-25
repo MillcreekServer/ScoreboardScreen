@@ -1,4 +1,4 @@
-package io.github.scoreboardscreen.constants;
+package io.github.wysohn.scoreboardscreen.constants;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;

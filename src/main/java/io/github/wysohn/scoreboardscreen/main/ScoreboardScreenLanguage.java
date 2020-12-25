@@ -1,4 +1,4 @@
-package io.github.scoreboardscreen.main;
+package io.github.wysohn.scoreboardscreen.main;
 
 
 import io.github.wysohn.rapidframework3.interfaces.language.ILang;

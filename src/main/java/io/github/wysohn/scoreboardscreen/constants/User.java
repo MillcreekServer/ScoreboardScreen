@@ -1,4 +1,4 @@
-package io.github.scoreboardscreen.constants;
+package io.github.wysohn.scoreboardscreen.constants;
 
 
 import io.github.wysohn.rapidframework3.bukkit.data.BukkitPlayer;

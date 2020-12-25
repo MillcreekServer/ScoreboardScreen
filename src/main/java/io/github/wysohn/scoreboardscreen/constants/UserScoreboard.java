@@ -1,8 +1,8 @@
-package io.github.scoreboardscreen.constants;
+package io.github.wysohn.scoreboardscreen.constants;
 
 import com.google.inject.assistedinject.Assisted;
-import io.github.scoreboardscreen.interfaces.IUserScoreboard;
-import io.github.scoreboardscreen.manager.ScoreboardManager;
+import io.github.wysohn.scoreboardscreen.interfaces.IUserScoreboard;
+import io.github.wysohn.scoreboardscreen.manager.ScoreboardManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;

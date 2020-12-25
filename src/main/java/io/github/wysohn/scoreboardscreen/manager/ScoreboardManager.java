@@ -1,15 +1,13 @@
-package io.github.scoreboardscreen.manager;
+package io.github.wysohn.scoreboardscreen.manager;
 
-import io.github.scoreboardscreen.constants.Animation;
-import io.github.scoreboardscreen.constants.Placeholder;
-import io.github.scoreboardscreen.constants.UserScoreboard;
-import io.github.scoreboardscreen.interfaces.IUserScoreboardFactory;
 import io.github.wysohn.rapidframework3.bukkit.utils.Utf8YamlConfiguration;
 import io.github.wysohn.rapidframework3.core.api.ManagerExternalAPI;
 import io.github.wysohn.rapidframework3.core.inject.annotations.PluginDirectory;
 import io.github.wysohn.rapidframework3.core.inject.annotations.PluginLogger;
 import io.github.wysohn.rapidframework3.core.main.Manager;
 import io.github.wysohn.rapidframework3.utils.JarUtil;
+import io.github.wysohn.scoreboardscreen.constants.Animation;
+import io.github.wysohn.scoreboardscreen.constants.Placeholder;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;

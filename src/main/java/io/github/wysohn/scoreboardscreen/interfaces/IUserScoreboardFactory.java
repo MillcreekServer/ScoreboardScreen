@@ -1,4 +1,4 @@
-package io.github.scoreboardscreen.interfaces;
+package io.github.wysohn.scoreboardscreen.interfaces;
 
 import org.bukkit.entity.Player;
 

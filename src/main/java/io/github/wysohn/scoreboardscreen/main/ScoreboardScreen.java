@@ -1,14 +1,7 @@
-package io.github.scoreboardscreen.main;
+package io.github.wysohn.scoreboardscreen.main;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
-import com.google.inject.assistedinject.FactoryProvider;
-import io.github.scoreboardscreen.constants.User;
-import io.github.scoreboardscreen.constants.UserScoreboard;
-import io.github.scoreboardscreen.interfaces.IUserScoreboard;
-import io.github.scoreboardscreen.interfaces.IUserScoreboardFactory;
-import io.github.scoreboardscreen.manager.ScoreboardManager;
-import io.github.scoreboardscreen.manager.UserManager;
 import io.github.wysohn.rapidframework3.bukkit.main.AbstractBukkitPlugin;
 import io.github.wysohn.rapidframework3.core.command.SubCommand;
 import io.github.wysohn.rapidframework3.core.inject.module.LanguagesModule;
@@ -16,6 +9,12 @@ import io.github.wysohn.rapidframework3.core.inject.module.ManagerModule;
 import io.github.wysohn.rapidframework3.core.inject.module.MediatorModule;
 import io.github.wysohn.rapidframework3.core.main.PluginMainBuilder;
 import io.github.wysohn.rapidframework3.core.player.AbstractPlayerWrapper;
+import io.github.wysohn.scoreboardscreen.constants.User;
+import io.github.wysohn.scoreboardscreen.constants.UserScoreboard;
+import io.github.wysohn.scoreboardscreen.interfaces.IUserScoreboard;
+import io.github.wysohn.scoreboardscreen.interfaces.IUserScoreboardFactory;
+import io.github.wysohn.scoreboardscreen.manager.ScoreboardManager;
+import io.github.wysohn.scoreboardscreen.manager.UserManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;

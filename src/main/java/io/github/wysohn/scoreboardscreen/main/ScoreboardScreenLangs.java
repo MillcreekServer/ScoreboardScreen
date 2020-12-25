@@ -2,13 +2,13 @@ package io.github.wysohn.scoreboardscreen.main;
 
 import io.github.wysohn.rapidframework3.interfaces.language.ILang;
 
-public enum scoreboardscreenLangs implements ILang {
+public enum ScoreboardScreenLangs implements ILang {
 
     ;
 
     private final String[] def;
 
-    scoreboardscreenLangs(String... def) {
+    ScoreboardScreenLangs(String... def) {
         this.def = def;
     }
 

@@ -1,5 +1,5 @@
-name: scoreboardscreen
-main: io.github.wysohn.scoreboardscreen.main.scoreboardscreen
+name: ScoreboardScreen
+main: io.github.wysohn.scoreboardscreen.main.ScoreboardScreen
 version: 3.0.0
 depend: [
   ]
