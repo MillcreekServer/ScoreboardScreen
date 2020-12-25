@@ -14,7 +14,7 @@ plugins {
 }
 
 group = 'io.github.wysohn'
-version = '3.0.1'
+version = '3.0.2'
 
 ext {
     id = project.name
@@ -71,12 +71,7 @@ task writePluginYml {
     map.put("softdepend", [
             "rapidframework",
             "Vault",
-            "PlaceholderAPI",
-            "ProtocolLib",
-            "WorldGuard",
-            "SmartInvs",
-            "ScoreboardScreen",
-            "Citizens"
+            "PlaceholderAPI"
     ])
     map.put("depend", [])
     map.put("commands", new LinkedHashMap<String, Object>() {
