@@ -1,6 +1,6 @@
 name: ScoreboardScreen
 main: io.github.wysohn.scoreboardscreen.main.ScoreboardScreen
-version: 3.0.0
+version: 3.0.2
 depend: [
   ]
 commands:
@@ -16,11 +16,6 @@ softdepend:
 - rapidframework
 - Vault
 - PlaceholderAPI
-- ProtocolLib
-- WorldGuard
-- SmartInvs
-- ScoreboardScreen
-- Citizens
 permissions:
   scoreboardscreen:
     description: root permission
