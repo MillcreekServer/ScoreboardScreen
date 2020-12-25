@@ -23,7 +23,7 @@ repositories {
 }
 
 group = 'io.github.wysohn'
-version = '3.0.1'
+version = '3.0.0'
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
@@ -70,7 +70,7 @@ publishing {
     repositories {
         maven {
             name = "scoreboardscreen"
-            url = uri("https://maven.pkg.github.com/millcreekserver/scoreboardscreen")
+            url = uri("https://maven.pkg.github.com/MillcreekServer/scoreboardscreen")
             credentials {
                 username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
                 password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
