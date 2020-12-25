@@ -69,7 +69,7 @@ dependencies {
 publishing {
     repositories {
         maven {
-            name = "ScoreboardScreen"
+            name = "scoreboardscreen"
             url = uri("https://maven.pkg.github.com/millcreekserver/scoreboardscreen")
             credentials {
                 username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
