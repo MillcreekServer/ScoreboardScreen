@@ -1,8 +1,27 @@
-name: ScoreboardScreen
-main: io.github.scoreboardscreen.main.ScoreboardScreen
-version: 2.0.0
-depend: [PlaceholderAPI, RapidFramework]
+name: scoreboardscreen
+main: io.github.wysohn.scoreboardscreen.main.scoreboardscreen
+version: 3.0.0
+depend: [
+  ]
 commands:
   scoreboardscreen:
-    description: blah
-    aliases: [ss]
+    aliases:
+    - sco
+    - ss
+    description: description
+author: wysohn
+authors: [
+  ]
+softdepend:
+- rapidframework
+- Vault
+- PlaceholderAPI
+- ProtocolLib
+- WorldGuard
+- SmartInvs
+- ScoreboardScreen
+- Citizens
+permissions:
+  scoreboardscreen:
+    description: root permission
+api-version: '1.13'
