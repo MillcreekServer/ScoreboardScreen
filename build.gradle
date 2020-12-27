@@ -14,7 +14,7 @@ plugins {
 }
 
 group = 'io.github.wysohn'
-version = '3.0.3'
+version = '3.0.4'
 
 ext {
     id = project.name
@@ -69,7 +69,7 @@ task writePluginYml {
     map.put("author", project.ext.author)
     map.put("authors", project.ext.authors)
     map.put("softdepend", [
-            "rapidframework",
+            "RapidFramework",
             "Vault",
             "PlaceholderAPI"
     ])
