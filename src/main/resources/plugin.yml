@@ -1,6 +1,6 @@
 name: ScoreboardScreen
 main: io.github.wysohn.scoreboardscreen.main.ScoreboardScreen
-version: 3.0.2
+version: 3.0.4
 depend: [
   ]
 commands:
@@ -13,7 +13,7 @@ author: wysohn
 authors: [
   ]
 softdepend:
-- rapidframework
+- RapidFramework
 - Vault
 - PlaceholderAPI
 permissions:
