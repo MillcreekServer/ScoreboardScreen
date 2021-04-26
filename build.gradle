@@ -244,20 +244,6 @@ dependencies {
     testImplementation 'org.spigotmc:spigot-api:1.16.5+'
 }
 
-jar {
-    from {
-        String[] include = [
-
-        ]
-
-        configurations.runtimeClasspath
-                .findAll { include.contains(it.name) }
-                .collect { it.isDirectory() ? it : zipTree(it) }
-    }
-
-    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
-}
-
 compileJava {
     options.encoding = 'UTF-8'
 }
