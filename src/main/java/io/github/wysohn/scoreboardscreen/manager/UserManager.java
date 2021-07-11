@@ -136,6 +136,7 @@ public class UserManager extends Manager implements Listener {
 
         @Override
         public void run() {
+            logger.info("Scoreboard update is started.");
             try {
                 while (this.isAlive() && !this.isInterrupted()) {
                     for (Entry<UUID, IUserScoreboard> entry : new HashMap<>(users).entrySet()) {

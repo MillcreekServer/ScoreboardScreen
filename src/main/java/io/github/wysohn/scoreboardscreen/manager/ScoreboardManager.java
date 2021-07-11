@@ -14,7 +14,7 @@ import org.bukkit.entity.Player;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.script.ScriptException;
+import javax.script.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -32,6 +32,8 @@ public class ScoreboardManager extends Manager {
     private final ManagerExternalAPI api;
 
     private final Map<UUID, Board> boards = new ConcurrentHashMap<>();
+
+    private ScriptEngineManager sem;
 
     private File configFile;
     private YamlConfiguration config;
@@ -54,6 +56,8 @@ public class ScoreboardManager extends Manager {
 
         jsFolder = new File(pluginDirectory, "animation");
         JarUtil.copyFromJar(getClass(), "*.js", pluginDirectory, JarUtil.CopyOption.COPY_IF_NOT_EXIST);
+
+        sem = new ScriptEngineManager();
     }
 
     @Override
@@ -140,7 +144,10 @@ public class ScoreboardManager extends Manager {
                 }
             }
 
-            Animation anim = new Animation(new File(jsFolder, jsNames), tick);
+            ScriptEngine engine = sem.getEngineByName("graal.js");
+            Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
+            bindings.put("polyglot.js.allowAllAccess", true);
+            Animation anim = new Animation(engine, new File(jsFolder, jsNames), tick);
 
             if (args.isEmpty())
                 ph = new Placeholder(api, value, anim);
