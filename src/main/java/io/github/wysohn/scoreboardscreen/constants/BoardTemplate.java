@@ -17,6 +17,10 @@ public class BoardTemplate {
     public final List<Line> scoreboard = new ArrayList<>();
 
     public BoardTemplate(ConfigurationSection config, File jsFolder) throws ScriptException, FileNotFoundException {
+        if(SEM == null){
+            SEM = new ScriptEngineManager();
+        }
+
         ConfigurationSection titleSection = config.getConfigurationSection("Title");
         title = extractPlaceHolder(Objects.requireNonNull(titleSection), jsFolder);
 
@@ -30,10 +34,6 @@ public class BoardTemplate {
                 Placeholder ph = extractPlaceHolder(section, jsFolder);
                 scoreboard.add(new Line(key, ph));
             }
-        }
-
-        if(SEM == null){
-            SEM = new ScriptEngineManager();
         }
     }
 
