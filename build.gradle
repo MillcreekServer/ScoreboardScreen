@@ -14,7 +14,7 @@ plugins {
 }
 
 group = 'io.github.wysohn'
-version = '3.1.0'
+version = '3.2.0'
 
 ext {
     id = project.name
@@ -78,7 +78,7 @@ task writePluginYml {
         {
             put(id.toLowerCase(), new HashMap<String, Object>() {
                 {
-                    put("aliases", [id.toLowerCase().substring(0, 3), "ss"])
+                    put("aliases", [id.toLowerCase().substring(0, 3), "sboard"])
                     put("description", desc)
                 }
             })

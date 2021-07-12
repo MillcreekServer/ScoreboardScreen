@@ -1,64 +1,70 @@
 package io.github.wysohn.scoreboardscreen.manager;
 
+import com.google.inject.Injector;
+import io.github.wysohn.rapidframework3.bukkit.manager.user.AbstractUserManager;
+import io.github.wysohn.rapidframework3.core.database.Databases;
+import io.github.wysohn.rapidframework3.core.inject.annotations.PluginDirectory;
 import io.github.wysohn.rapidframework3.core.inject.annotations.PluginLogger;
-import io.github.wysohn.rapidframework3.core.main.Manager;
+import io.github.wysohn.rapidframework3.core.main.ManagerConfig;
+import io.github.wysohn.rapidframework3.interfaces.plugin.IShutdownHandle;
 import io.github.wysohn.rapidframework3.interfaces.plugin.ITaskSupervisor;
+import io.github.wysohn.rapidframework3.interfaces.serialize.ISerializer;
+import io.github.wysohn.rapidframework3.interfaces.serialize.ITypeAsserter;
+import io.github.wysohn.scoreboardscreen.constants.User;
 import io.github.wysohn.scoreboardscreen.interfaces.IUserScoreboard;
 import io.github.wysohn.scoreboardscreen.interfaces.IUserScoreboardFactory;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
 
-import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
+import java.io.File;
+import java.lang.ref.Reference;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 @Singleton
-public class UserManager extends Manager implements Listener {
+public class UserManager extends AbstractUserManager<User> implements Listener {
     private final long INTERVAL_MILLIS = 50L;
     private final ITaskSupervisor task;
     private final Logger logger;
     private final IUserScoreboardFactory scoreboardFactory;
 
-    private final Map<UUID, IUserScoreboard> users = new ConcurrentHashMap<>();
-
     private Thread scoreboardUpdateThread;
 
-    @Inject
-    public UserManager(ITaskSupervisor task,
+    public UserManager(@Named("pluginName") String pluginName,
                        @PluginLogger Logger logger,
+                       ManagerConfig config,
+                       @PluginDirectory File pluginDir,
+                       IShutdownHandle shutdownHandle,
+                       ISerializer serializer,
+                       ITypeAsserter asserter,
+                       Injector injector,
+                       ITaskSupervisor task,
                        IUserScoreboardFactory scoreboardFactory) {
+        super(pluginName, logger, config, pluginDir, shutdownHandle, serializer, asserter, injector, User.class);
         this.task = task;
         this.logger = logger;
         this.scoreboardFactory = scoreboardFactory;
     }
 
     @Override
-    public void enable() throws Exception {
+    protected Databases.DatabaseFactory createDatabaseFactory() {
+        return getDatabaseFactory("User");
+    }
 
+    @Override
+    protected User newInstance(UUID uuid) {
+        return new User(uuid);
     }
 
     @Override
     public void load() throws Exception {
+        super.load();
+
         if (scoreboardUpdateThread != null)
             scoreboardUpdateThread.interrupt();
-
-        Bukkit.getOnlinePlayers().forEach(player -> {
-            users.remove(player.getUniqueId());
-            users.put(player.getUniqueId(), scoreboardFactory.create(player));
-        });
 
         scoreboardUpdateThread = new ScoreboardUpdateThread(INTERVAL_MILLIS);
         scoreboardUpdateThread.start();
@@ -68,60 +74,18 @@ public class UserManager extends Manager implements Listener {
     public void disable() throws Exception {
         if (scoreboardUpdateThread != null)
             scoreboardUpdateThread.interrupt();
+
+        super.disable();
     }
 
-    public IUserScoreboard getBoard(UUID playerUuid){
-        return users.get(playerUuid);
-    }
+    @Override
+    public void onJoin(PlayerJoinEvent event) {
+        super.onJoin(event);
 
-    @EventHandler
-    public void onDeath(PlayerDeathEvent e) {
-        Player player = e.getEntity();
-
-        users.remove(player.getUniqueId());
-    }
-
-    @EventHandler
-    public void onRespawn(PlayerRespawnEvent e) {
-        Player player = e.getPlayer();
-
-        lazyUpdate(player);
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onJoin(PlayerJoinEvent e) {
-        Player player = e.getPlayer();
-
-        lazyUpdate(player);
-    }
-
-    @EventHandler
-    public void onTeleport(PlayerTeleportEvent e) {
-        Player player = e.getPlayer();
-
-        lazyUpdate(player);
-    }
-
-    private void lazyUpdate(Player player) {
-        task.async(() -> {
-            Thread.sleep(50L);
-
-            task.sync(() -> {
-                if(users.containsKey(player.getUniqueId()))
-                    return null;
-
-                users.put(player.getUniqueId(), scoreboardFactory.create(player));
-                return null;
-            }).get();
-            return null;
-        });
-    }
-
-    @EventHandler
-    public void onQuit(PlayerQuitEvent e) {
-        Player player = e.getPlayer();
-
-        users.remove(player.getUniqueId());
+        Player player = event.getPlayer();
+        get(player.getUniqueId())
+                .map(Reference::get)
+                .ifPresent(user -> user.setScoreboard(scoreboardFactory.create(player)));
     }
 
     private class ScoreboardUpdateThread extends Thread {
@@ -139,15 +103,10 @@ public class UserManager extends Manager implements Listener {
             logger.info("Scoreboard update is started.");
             try {
                 while (this.isAlive() && !this.isInterrupted()) {
-                    for (Entry<UUID, IUserScoreboard> entry : new HashMap<>(users).entrySet()) {
-                        try {
-                            entry.getValue().update();
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
-                            logger.warning(entry.getKey().toString());
-                        }
-                    }
-
+                    keySet().forEach(uuid -> get(uuid)
+                            .map(Reference::get)
+                            .map(User::getScoreboard)
+                            .ifPresent(IUserScoreboard::update));
                     Thread.sleep(intervalMillis);
                 }
             } catch (InterruptedException ex) {
