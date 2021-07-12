@@ -15,6 +15,7 @@ import io.github.wysohn.scoreboardscreen.constants.User;
 import io.github.wysohn.scoreboardscreen.interfaces.IUserScoreboard;
 import io.github.wysohn.scoreboardscreen.interfaces.IUserScoreboardFactory;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
@@ -80,6 +81,7 @@ public class UserManager extends AbstractUserManager<User> implements Listener {
         super.disable();
     }
 
+    @EventHandler
     @Override
     public void onJoin(PlayerJoinEvent event) {
         super.onJoin(event);
