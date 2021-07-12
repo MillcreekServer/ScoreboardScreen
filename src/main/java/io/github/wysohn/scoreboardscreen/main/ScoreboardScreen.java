@@ -5,10 +5,7 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 import io.github.wysohn.rapidframework3.bukkit.main.AbstractBukkitPlugin;
 import io.github.wysohn.rapidframework3.bukkit.manager.api.PlaceholderAPI;
 import io.github.wysohn.rapidframework3.core.command.SubCommand;
-import io.github.wysohn.rapidframework3.core.inject.module.GsonSerializerModule;
-import io.github.wysohn.rapidframework3.core.inject.module.LanguagesModule;
-import io.github.wysohn.rapidframework3.core.inject.module.ManagerModule;
-import io.github.wysohn.rapidframework3.core.inject.module.MediatorModule;
+import io.github.wysohn.rapidframework3.core.inject.module.*;
 import io.github.wysohn.rapidframework3.core.main.PluginMainBuilder;
 import io.github.wysohn.rapidframework3.core.player.AbstractPlayerWrapper;
 import io.github.wysohn.scoreboardscreen.constants.BoardTemplate;
@@ -49,6 +46,7 @@ public class ScoreboardScreen extends AbstractBukkitPlugin {
 
         ));
         pluginMainBuilder.addModule(new GsonSerializerModule());
+        pluginMainBuilder.addModule(new TypeAsserterModule());
         pluginMainBuilder.addModule(new AbstractModule() {
             @Override
             protected void configure() {
