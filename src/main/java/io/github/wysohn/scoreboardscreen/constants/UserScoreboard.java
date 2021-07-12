@@ -3,6 +3,7 @@ package io.github.wysohn.scoreboardscreen.constants;
 import com.google.inject.assistedinject.Assisted;
 import io.github.wysohn.rapidframework3.bukkit.manager.api.PlaceholderAPI;
 import io.github.wysohn.rapidframework3.core.api.ManagerExternalAPI;
+import io.github.wysohn.rapidframework3.interfaces.plugin.ITaskSupervisor;
 import io.github.wysohn.scoreboardscreen.interfaces.IBoardState;
 import io.github.wysohn.scoreboardscreen.interfaces.IUserScoreboard;
 import io.github.wysohn.scoreboardscreen.manager.ScoreboardTemplateManager;
@@ -15,6 +16,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class UserScoreboard implements IUserScoreboard {
+    private final ITaskSupervisor task;
     private final UserManager userManager;
     private final Player player;
 
@@ -23,10 +25,12 @@ public class UserScoreboard implements IUserScoreboard {
     private IBoardState currentBoardState;
 
     @Inject
-    public UserScoreboard(ScoreboardTemplateManager scoreboardTemplateManager,
+    public UserScoreboard(ITaskSupervisor task,
+                          ScoreboardTemplateManager scoreboardTemplateManager,
                           UserManager userManager,
                           ManagerExternalAPI api,
                           @Assisted Player player) {
+        this.task = task;
         this.userManager = userManager;
         this.player = player;
 
@@ -63,8 +67,10 @@ public class UserScoreboard implements IUserScoreboard {
                                     .orElse(defaultBoardState);
 
                             if(currentBoardState != nextState){
-                                nextState.registerBoard(player);
-                                player.setHealth(player.getHealth());
+                                task.sync(() -> {
+                                    nextState.registerBoard(player);
+                                    player.setHealth(player.getHealth());
+                                });
                             }
                         }
 
