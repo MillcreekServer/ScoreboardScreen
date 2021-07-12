@@ -35,6 +35,7 @@ public class UserScoreboard implements IUserScoreboard {
                 .flatMap(a -> a.getAPI(PlaceholderAPI.class))
                 .map(papi -> papi.parse(user, before))
                 .orElse(before));
+        this.currentBoardState = defaultBoardState;
     }
 
     @Override

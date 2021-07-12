@@ -102,6 +102,7 @@ public class SimpleBoardState implements IBoardState {
         String currentTitle = Optional.of(template)
                 .map(t -> t.title)
                 .map(placeholder -> placeholder.parse(player, beforeParse))
+                .map(str -> str.substring(0, Math.min(36, str.length())))
                 .orElse("");
 
         // update title
