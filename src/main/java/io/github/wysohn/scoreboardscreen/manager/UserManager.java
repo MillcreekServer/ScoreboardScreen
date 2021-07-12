@@ -1,5 +1,6 @@
 package io.github.wysohn.scoreboardscreen.manager;
 
+import com.google.inject.Inject;
 import com.google.inject.Injector;
 import io.github.wysohn.rapidframework3.bukkit.manager.user.AbstractUserManager;
 import io.github.wysohn.rapidframework3.core.database.Databases;
@@ -33,6 +34,7 @@ public class UserManager extends AbstractUserManager<User> implements Listener {
 
     private Thread scoreboardUpdateThread;
 
+    @Inject
     public UserManager(@Named("pluginName") String pluginName,
                        @PluginLogger Logger logger,
                        ManagerConfig config,

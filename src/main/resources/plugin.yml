@@ -1,13 +1,13 @@
 name: ScoreboardScreen
 main: io.github.wysohn.scoreboardscreen.main.ScoreboardScreen
-version: 3.1.0
+version: 3.2.0
 depend: [
   ]
 commands:
   scoreboardscreen:
     aliases:
     - sco
-    - ss
+    - sboard
     description: description
 author: wysohn
 authors: [
