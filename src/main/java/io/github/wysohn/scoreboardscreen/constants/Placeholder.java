@@ -36,7 +36,7 @@ public class Placeholder {
         if (interval < 0)
             interval = 0;
 
-        result = before.apply(sender, result);
+        result = before.apply(sender, value);
 
         if (!fail && animation != null) {
             try {
