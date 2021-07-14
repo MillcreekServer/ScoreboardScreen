@@ -1,8 +1,6 @@
 package io.github.wysohn.scoreboardscreen.constants;
 
-import javax.script.ScriptContext;
-import javax.script.ScriptEngine;
-import javax.script.ScriptException;
+import javax.script.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -10,13 +8,14 @@ import java.io.FileReader;
 public class Animation {
     private final ScriptEngine engine;
     private final int tick;
+    private final CompiledScript compiled;
 
     public Animation(ScriptEngine engine, File script, int tick) throws FileNotFoundException, ScriptException {
         this.engine = engine;
         this.tick = tick;
 
         FileReader fr = new FileReader(script);
-        engine.eval(fr);
+        compiled = ((Compilable) engine).compile(fr);
     }
 
     public Animation(ScriptEngine engine, File script) throws FileNotFoundException, ScriptException {
@@ -24,6 +23,8 @@ public class Animation {
     }
 
     public String[] invoke(ScriptContext context, String str, String... params) throws NoSuchMethodException, ScriptException {
+        compiled.eval(context);
+
         String combine = combineParams(params);
         return (String[]) engine.eval("Java.to(animate(" + "\"" + str + "\"" + combine + "), Java.type(\"java.lang.String[]\"));",
                 context);
