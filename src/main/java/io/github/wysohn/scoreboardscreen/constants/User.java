@@ -36,4 +36,6 @@ public class User extends BukkitPlayer {
     public void setScoreboard(IUserScoreboard scoreboard) {
         this.scoreboard = scoreboard;
     }
+
+
 }

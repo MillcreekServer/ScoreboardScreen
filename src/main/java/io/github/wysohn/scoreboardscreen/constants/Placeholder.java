@@ -40,7 +40,7 @@ public class Placeholder {
 
         if (!fail && animation != null) {
             try {
-                String[] animations = animation.invoke(result, params);
+                String[] animations = animation.invoke(sender.getScoreboard(), result, params);
                 result = animations[phase++ % animations.length];
             } catch (NoSuchMethodException | ScriptException e) {
                 fail = true;

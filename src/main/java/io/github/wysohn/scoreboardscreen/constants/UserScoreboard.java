@@ -12,11 +12,19 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import javax.inject.Inject;
+import javax.script.Bindings;
+import javax.script.ScriptContext;
+import javax.script.SimpleScriptContext;
+import java.io.Reader;
+import java.io.Writer;
 import java.lang.ref.Reference;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 public class UserScoreboard implements IUserScoreboard {
+    private final ScriptContext context = new SimpleScriptContext();
+
     private final ITaskSupervisor task;
     private final UserManager userManager;
     private final Player player;
@@ -85,5 +93,78 @@ public class UserScoreboard implements IUserScoreboard {
                         }
                     }
                 });
+    }
+
+    //--------------------------------------------------------------------------------
+    //ScriptContext delegates
+
+    @Override
+    public void setBindings(Bindings bindings, int scope) {
+        context.setBindings(bindings, scope);
+    }
+
+    @Override
+    public Bindings getBindings(int scope) {
+        return context.getBindings(scope);
+    }
+
+    @Override
+    public void setAttribute(String name, Object value, int scope) {
+        context.setAttribute(name, value, scope);
+    }
+
+    @Override
+    public Object getAttribute(String name, int scope) {
+        return context.getAttribute(name, scope);
+    }
+
+    @Override
+    public Object removeAttribute(String name, int scope) {
+        return context.removeAttribute(name, scope);
+    }
+
+    @Override
+    public Object getAttribute(String name) {
+        return context.getAttribute(name);
+    }
+
+    @Override
+    public int getAttributesScope(String name) {
+        return context.getAttributesScope(name);
+    }
+
+    @Override
+    public Writer getWriter() {
+        return context.getWriter();
+    }
+
+    @Override
+    public Writer getErrorWriter() {
+        return context.getErrorWriter();
+    }
+
+    @Override
+    public void setWriter(Writer writer) {
+        context.setWriter(writer);
+    }
+
+    @Override
+    public void setErrorWriter(Writer writer) {
+        context.setErrorWriter(writer);
+    }
+
+    @Override
+    public Reader getReader() {
+        return context.getReader();
+    }
+
+    @Override
+    public void setReader(Reader reader) {
+        context.setReader(reader);
+    }
+
+    @Override
+    public List<Integer> getScopes() {
+        return context.getScopes();
     }
 }

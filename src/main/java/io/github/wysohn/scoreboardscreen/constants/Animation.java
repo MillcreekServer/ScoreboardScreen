@@ -1,5 +1,6 @@
 package io.github.wysohn.scoreboardscreen.constants;
 
+import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 import java.io.File;
@@ -22,9 +23,10 @@ public class Animation {
         this(engine, script, 5);
     }
 
-    public String[] invoke(String str, String... params) throws NoSuchMethodException, ScriptException {
+    public String[] invoke(ScriptContext context, String str, String... params) throws NoSuchMethodException, ScriptException {
         String combine = combineParams(params);
-        return (String[]) engine.eval("Java.to(animate(" + "\"" + str + "\"" + combine + "), Java.type(\"java.lang.String[]\"));");
+        return (String[]) engine.eval("Java.to(animate(" + "\"" + str + "\"" + combine + "), Java.type(\"java.lang.String[]\"));",
+                context);
     }
 
     private String combineParams(Object[] params) {

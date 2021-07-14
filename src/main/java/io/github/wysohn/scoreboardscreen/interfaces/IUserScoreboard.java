@@ -1,6 +1,8 @@
 package io.github.wysohn.scoreboardscreen.interfaces;
 
-public interface IUserScoreboard {
+import javax.script.ScriptContext;
+
+public interface IUserScoreboard extends ScriptContext {
     /**
      * Change current board state.
      *
