@@ -1,9 +1,13 @@
 package io.github.wysohn.scoreboardscreen.constants;
 
+import javax.script.ScriptContext;
 import javax.script.ScriptException;
+import javax.script.SimpleScriptContext;
 import java.util.function.BiFunction;
 
 public class Placeholder {
+    private final ScriptContext context = new SimpleScriptContext();
+
     final String value;
     final Animation animation;
 
@@ -40,7 +44,7 @@ public class Placeholder {
 
         if (!fail && animation != null) {
             try {
-                String[] animations = animation.invoke(sender.getScoreboard(), result, params);
+                String[] animations = animation.invoke(context, result, params);
                 result = animations[phase++ % animations.length];
             } catch (NoSuchMethodException | ScriptException e) {
                 fail = true;
