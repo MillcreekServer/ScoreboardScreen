@@ -26,6 +26,9 @@ public class SimpleBoardState implements IBoardState {
     private final List<TeamLine> lines = new ArrayList<>();
     private final Objective objBelow;
 
+    private final Placeholder.Context titleContext;
+    private final List<Placeholder.Context> lineContexts = new ArrayList<>();
+
     public SimpleBoardState(BoardTemplate template,
                             BiFunction<User, String, String> beforeParse,
                             ITransitionStrategy transitionStrategy) {
@@ -37,12 +40,14 @@ public class SimpleBoardState implements IBoardState {
 
         objSide = board.registerNewObjective("title", "dummy", "title");
         objSide.setDisplaySlot(DisplaySlot.SIDEBAR);
+        titleContext = new Placeholder.Context();
 
         for (int i = 0; i > -15; i--) {
             Team team = board.registerNewTeam(String.valueOf(i));
             ChatColor color = ChatColor.values()[-i];
             team.addEntry(color.toString());
             lines.add(new TeamLine(color, team));
+            lineContexts.add(new Placeholder.Context());
         }
 
         objBelow = board.registerNewObjective("showhealth", "health", "showhealth");
@@ -101,7 +106,7 @@ public class SimpleBoardState implements IBoardState {
     public void updateTitle(User player) {
         String currentTitle = Optional.of(template)
                 .map(t -> t.title)
-                .map(placeholder -> placeholder.parse(player, beforeParse))
+                .map(placeholder -> placeholder.parse(player, titleContext, beforeParse))
                 .map(str -> str.substring(0, Math.min(36, str.length())))
                 .orElse("");
 
@@ -126,7 +131,7 @@ public class SimpleBoardState implements IBoardState {
                     .map(t -> t.scoreboard)
                     .filter(lines -> i < lines.size())
                     .map(lines -> lines.get(i))
-                    .map(line -> line.value.parse(player, beforeParse))
+                    .map(line -> line.value.parse(player, lineContexts.get(i), beforeParse))
                     .orElse("Error");
             value = value.substring(0, Math.min(40, value.length()));
             setLine(valueLine.team, value);

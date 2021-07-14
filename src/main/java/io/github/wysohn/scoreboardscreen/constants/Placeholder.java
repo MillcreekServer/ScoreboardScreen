@@ -6,7 +6,7 @@ import javax.script.SimpleScriptContext;
 import java.util.function.BiFunction;
 
 public class Placeholder {
-    private final ScriptContext context = new SimpleScriptContext();
+    private final ScriptContext scriptContext = new SimpleScriptContext();
 
     final String value;
     final Animation animation;
@@ -28,34 +28,36 @@ public class Placeholder {
     }
 
     private String result;
-    private int interval = 0;
-    private int phase = 0;
 
     private boolean fail = false;
 
-    public String parse(User sender, BiFunction<User, String, String> before) {
-        if (result != null && animation != null && interval++ % animation.getTick() != 0) {
+    public String parse(User sender, Context context, BiFunction<User, String, String> before) {
+        if (result != null && animation != null && context.interval++ % animation.getTick() != 0) {
             return result;
         }
-        if (interval < 0)
-            interval = 0;
+        if (context.interval < 0)
+            context.interval = 0;
 
         result = before.apply(sender, value);
 
         if (!fail && animation != null) {
             try {
-                String[] animations = animation.invoke(context, result, params);
-                result = animations[phase++ % animations.length];
+                String[] animations = animation.invoke(scriptContext, result, params);
+                result = animations[context.phase++ % animations.length];
             } catch (NoSuchMethodException | ScriptException e) {
                 fail = true;
                 e.printStackTrace();
             }
         }
 
-        if (phase < 0)
-            phase = 0;
+        if (context.phase < 0)
+            context.phase = 0;
 
         return result;
     }
 
+    public static class Context{
+        private int interval = 0;
+        private int phase = 0;
+    }
 }
