@@ -27,25 +27,21 @@ public class Placeholder {
         this.params = params;
     }
 
-    private String result;
-
-    private boolean fail = false;
-
     public String parse(User sender, Context context, BiFunction<User, String, String> before) {
-        if (result != null && animation != null && context.interval++ % animation.getTick() != 0) {
-            return result;
+        if (context.result != null && animation != null && context.interval++ % animation.getTick() != 0) {
+            return context.result;
         }
         if (context.interval < 0)
             context.interval = 0;
 
-        result = before.apply(sender, value);
+        context.result = before.apply(sender, value);
 
-        if (!fail && animation != null) {
+        if (!context.fail && animation != null) {
             try {
-                String[] animations = animation.invoke(scriptContext, result, params);
-                result = animations[context.phase++ % animations.length];
+                String[] animations = animation.invoke(scriptContext, context.result, params);
+                context.result = animations[context.phase++ % animations.length];
             } catch (NoSuchMethodException | ScriptException e) {
-                fail = true;
+                context.fail = true;
                 e.printStackTrace();
             }
         }
@@ -53,11 +49,13 @@ public class Placeholder {
         if (context.phase < 0)
             context.phase = 0;
 
-        return result;
+        return context.result;
     }
 
     public static class Context{
         private int interval = 0;
         private int phase = 0;
+        private String result;
+        private boolean fail = false;
     }
 }
