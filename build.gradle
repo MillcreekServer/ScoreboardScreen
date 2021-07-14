@@ -14,7 +14,7 @@ plugins {
 }
 
 group = 'io.github.wysohn'
-version = '3.2.11'
+version = '3.2.12'
 
 ext {
     id = project.name

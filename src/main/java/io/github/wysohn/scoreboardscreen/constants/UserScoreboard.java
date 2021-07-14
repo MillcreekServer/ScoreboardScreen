@@ -72,15 +72,13 @@ public class UserScoreboard implements IUserScoreboard {
                             currentBoardState = Optional.ofNullable(currentBoardState)
                                     .map(state -> state.nextState(state))
                                     .orElse(defaultBoardState);
-                            task.sync(() -> {
-                                currentBoardState.registerBoard(player);
-                                player.setHealth(player.getHealth());
-                            });
+
+                            currentBoardState.registerBoard(player, task::sync);
                         }
 
-                        currentBoardState.updateTitle(user);
-                        currentBoardState.updateLines(user);
-                        currentBoardState.updateTeams(user);
+                        currentBoardState.updateTitle(user, task::sync);
+                        currentBoardState.updateLines(user, task::sync);
+                        currentBoardState.updateTeams(user, task::sync);
                     } catch (Exception ex){
                         ex.printStackTrace();
 

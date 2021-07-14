@@ -13,6 +13,7 @@ import org.bukkit.scoreboard.Team;
 
 import java.util.*;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 
 public class SimpleBoardState implements IBoardState {
     private final BoardTemplate template;
@@ -93,8 +94,14 @@ public class SimpleBoardState implements IBoardState {
     }
 
     @Override
-    public void registerBoard(Player player) {
-        player.setScoreboard(board);
+    public void registerBoard(Player player, Consumer<Runnable> runSynchronous) {
+        runSynchronous.accept(() -> {
+            if(player.getScoreboard() == board)
+                return;
+
+            player.setHealth(player.getHealth());
+            player.setScoreboard(board);
+        });
     }
 
     @Override
@@ -103,21 +110,23 @@ public class SimpleBoardState implements IBoardState {
     }
 
     @Override
-    public void updateTitle(User player) {
+    public void updateTitle(User player, Consumer<Runnable> runSynchronous) {
         String currentTitle = Optional.of(template)
                 .map(t -> t.title)
                 .map(placeholder -> placeholder.parse(player, titleContext, beforeParse))
                 .map(str -> str.substring(0, Math.min(36, str.length())))
                 .orElse("");
 
-        // update title
-        if(!objSide.getDisplayName().equals(currentTitle)){
-            objSide.setDisplayName(currentTitle);
-        }
+        runSynchronous.accept(() -> {
+            // update title
+            if(!objSide.getDisplayName().equals(currentTitle)){
+                objSide.setDisplayName(currentTitle);
+            }
+        });
     }
 
     @Override
-    public void updateLines(User player) {
+    public void updateLines(User player, Consumer<Runnable> runSynchronous) {
         // update lines
         for (int index = 0; index < template.numLines(); index++) {
             if (index > lines.size() - 1)
@@ -139,7 +148,7 @@ public class SimpleBoardState implements IBoardState {
     }
 
     @Override
-    public void updateTeams(User player) {
+    public void updateTeams(User player, Consumer<Runnable> runSynchronous) {
         List<ITeamInfo> copy;
         synchronized (teams){
             copy = new LinkedList<>(teams.values());
