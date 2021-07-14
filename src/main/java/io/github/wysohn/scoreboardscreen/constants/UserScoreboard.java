@@ -8,6 +8,7 @@ import io.github.wysohn.scoreboardscreen.interfaces.IBoardState;
 import io.github.wysohn.scoreboardscreen.interfaces.IUserScoreboard;
 import io.github.wysohn.scoreboardscreen.manager.ScoreboardTemplateManager;
 import io.github.wysohn.scoreboardscreen.manager.UserManager;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import javax.inject.Inject;
@@ -57,8 +58,10 @@ public class UserScoreboard implements IUserScoreboard {
         userManager.get(player.getUniqueId())
                 .map(Reference::get)
                 .ifPresent(user -> {
-                    if(!user.isToggleState())
+                    if(!user.isToggleState()) {
+                        task.sync(() -> player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard()));
                         return;
+                    }
 
                     try{
                         synchronized (stateChangeMonitor){

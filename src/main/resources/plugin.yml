@@ -1,6 +1,6 @@
 name: ScoreboardScreen
 main: io.github.wysohn.scoreboardscreen.main.ScoreboardScreen
-version: 3.2.5
+version: 3.2.6
 depend: [
   ]
 commands:
